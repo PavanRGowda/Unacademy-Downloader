@@ -19,7 +19,7 @@ def down_audio(img_link,lesson_name):
         ret = urlretrieve(aud_link+"mp4",lesson_name+".mp4")  
         if (ret[1]["Content-Type"]) == "application/xml":
             ret = urlretrieve(aud_link+"mp3",lesson_name+".mp3")
-        print "Downloaded ",lesson_name," -",(int(ret[1]["Content-Length"])/1024),"KB"
+        print "\nDownloaded ",lesson_name," -",(int(ret[1]["Content-Length"])/1024),"KB"
     except:
         print "Download Error"        
     
