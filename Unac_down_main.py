@@ -113,4 +113,5 @@ while 1:
     if choice == "1":
         continue
     else:
+        ex = raw_input("Thank You :-)")
         break
