@@ -49,7 +49,6 @@ def image_link(lesson, lesson_number=1):
     pos = img_link.find('"')
     img_link = img_link[0:pos]
     lesson_name = str(lesson_number) + "_" +re.search("\/lesson\/(.*)\/",lesson).group(1)
-    print lesson_name
     if aud == "y":
         thread.start_new_thread(down_audio,(img_link,lesson_name))
     down_slides(img_link,lesson_name)
@@ -75,7 +74,6 @@ if choice == 1:
     #To find links for all lessons
     for link in soup.find_all('a'): 
         if ("/lesson/" in str(link.get('href'))) and ("/comment/" not in str(link.get('href'))):
-            print link.get('href')
             complete = "https://unacademy.com"+str(link.get('href'))
             if complete not in lesson:
                 lesson.append(complete)
