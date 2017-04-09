@@ -9,8 +9,9 @@ from urllib import urlretrieve
 import requests
 import re
 import os
-import thread
+from threading import Thread
 
+t=list()
 def down_audio(img_link,lesson_name):
     code = re.search("https://player-images.unacademy.link/(.*)/images",img_link).group(1)
     aud_link = "https://player.unacademy.link/lesson-raw/"+code+"/audio."
@@ -19,7 +20,7 @@ def down_audio(img_link,lesson_name):
         ret = urlretrieve(aud_link+"mp4",lesson_name+".mp4")  
         if (ret[1]["Content-Type"]) == "application/xml":
             ret = urlretrieve(aud_link+"mp3",lesson_name+".mp3")
-        print "\nDownloaded ",lesson_name," -",(int(ret[1]["Content-Length"])/1024),"KB"
+        print "\nDownloaded Audio ",lesson_name," -",(int(ret[1]["Content-Length"])/1024),"KB"
     except:
         print "Download Error"        
     
@@ -50,7 +51,9 @@ def image_link(lesson, lesson_number=1):
     img_link = img_link[0:pos]
     lesson_name = str(lesson_number) + "_" +re.search("\/lesson\/(.*)\/",lesson).group(1)
     if aud == "y":
-        thread.start_new_thread(down_audio,(img_link,lesson_name))
+        s = Thread(target=down_audio,args=(img_link,lesson_name))
+        t.append(s)
+        s.start()
     down_slides(img_link,lesson_name)
 
 #link of first video of a lesson_name 
@@ -62,13 +65,15 @@ lesson = list()
 print "1. Whole lesson_name\n2. Particular Lesson"
 choice = int(raw_input("Enter the Download Choice: "))
 aud = raw_input("Need Audio? (y,n) :")
-name = raw_input("Enter Name: ").replace(" ","_").replace(":","_")
-try:
-    os.mkdir(name)
-    os.chdir(name)
-except:
-    print "Error While Creating Directory...Check for directory existence"
-    exit
+while 1:
+    try:
+        name = raw_input("Enter Name: ").replace(" ","_").replace(":","_")
+        os.mkdir(name)
+        os.chdir(name)
+        break
+    except:
+        print "Error While Creating Directory...Check if directory already Exist"
+        continue
 
 if choice == 1:
     #To find links for all lessons
@@ -77,7 +82,7 @@ if choice == 1:
             complete = "https://unacademy.com"+str(link.get('href'))
             if complete not in lesson:
                 lesson.append(complete)
-            #print link.get('href')
+
     #get link of all the slides  
     lesson_num = 0
     for i in lesson:
@@ -86,4 +91,8 @@ if choice == 1:
         
 elif choice == 2:
     image_link(root)
-    
+
+print "Waiting for All Downloads to Complete"
+for i in t:
+    i.join()
+print "Downloads Completed","Thank You :-)"
