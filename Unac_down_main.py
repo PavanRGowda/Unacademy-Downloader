@@ -45,12 +45,14 @@ def down_slides(url, lesson_name, num=100):
         except:
             print "Download Error"
 
-def image_link(lesson, aud, lesson_number=1):
+def image_link(lesson, aud, width, lesson_number=1):
     r  = requests.get(lesson)
     data = r.text
     img_link = re.search(".*(https://player-images.unacademy.link/.*/images/.{8}).*", data).group(1)
     pos = img_link.find('"')
     img_link = img_link[0:pos]
+    img_link = img_link + "?dpr=1&fit=clip&w=" + width +"&fm=webp"
+    print img_link
     lesson_name = str(lesson_number) + "_" + re.search("\/lesson\/(.*)\/", lesson).group(1)
     if aud == "y":
         s = Thread(target = down_audio, args = (img_link, lesson_name))
@@ -60,6 +62,7 @@ def image_link(lesson, aud, lesson_number=1):
 
 def start_download():
     #link of first video of a lesson_name 
+    global width
     root = raw_input("Enter Unacademy URL: ")
     try:
         lesson_name  = requests.get(root)
@@ -72,6 +75,7 @@ def start_download():
     print "1. Whole lesson_name\n2. Particular Lesson"
     choice = int(raw_input("Enter the Download Choice: "))
     aud = raw_input("Need Audio? (y,n) :")
+    width = raw_input("Width (normally 960) :")
     while 1:
         try:
             name = raw_input("Enter Name: ").replace(" ","_").replace(":","_")
@@ -94,10 +98,10 @@ def start_download():
         lesson_num = 0
         for i in lesson:
             lesson_num+=1
-            image_link(i, aud, lesson_num)
+            image_link(i, aud, width, lesson_num)
             
     elif choice == 2:
-        image_link(root, aud)
+        image_link(root, aud, width)
     
     print "Waiting for All Downloads to Complete"
     for i in t:
