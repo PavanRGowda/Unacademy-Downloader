@@ -2,9 +2,13 @@
 Download Slides and Audio from Unacademy Site
 
 pre-requisite:
-
-  python 2.7 should be available to run this application
-  Disk space of atleast 100 MB
+	
+	1. python 2.7 should be available to run this application
+	2. Disk space of atleast 100 MB
+	3. Following Python packages should be available
+		i) BeautifulSoup
+		ii) urllib 
+		iii) requests
   
 Application Usage:
 
