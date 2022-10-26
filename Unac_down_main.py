@@ -103,7 +103,7 @@ def start_download():
     elif choice == 2:
         image_link(root, aud, width)
     
-    print "Waiting for All Downloads to Complete"
+    print "Waiting for All Downloads to Complete ...."
     for i in t:
         i.join()
     print "Downloads Completed"
